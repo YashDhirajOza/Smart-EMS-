@@ -1,0 +1,7 @@
+pandas==2.2.1
+influxdb-client==1.41.0
+SQLAlchemy==2.0.30
+psycopg2-binary==2.9.9
+scikit-learn==1.4.2
+pydantic==1.10.17
+python-dotenv==1.0.1

@@ -15,6 +15,16 @@ UrjaNet is a cloud-native, proactive Energy Management System designed to stabil
 - **Experience Layer (Module 5):** React + D3.js front-end delivering the animated energy flow, component heartbeats, alert center, and advisory panel consuming the backend APIs.
 - **RL Integration Placeholder:** Secure endpoint to accept optimal action recommendations from a future reinforcement learning service and relay them to the advisory UI.
 
+## Reference Data Sources
+- **IoT Time-Series & Load Profiles:** [Residential Load Diagrams (Mendeley)](https://data.mendeley.com/datasets/y58jknpgs8/2), [Zenodo PV & Consumption](https://zenodo.org/records/6473455)
+- **Solar & Wind Generation:** [Kaggle Solar Power Generation](https://www.kaggle.com/datasets/anikannal/solar-power-generation-data), [Global Solar Atlas](https://en.wikipedia.org/wiki/Global_Solar_Atlas)
+- **EV Charging Sessions:** [Mendeley EV Charging Dataset](https://data.mendeley.com/datasets/msxs4vj48g/1)
+- **Policy & Resource Catalogues:** [MNRE Open Data](https://www.data.gov.in/catalogs/?ministry=Ministry%20of%20New%20and%20Renewable%20Energy)
+
+See `docs/datasets.md` for detailed usage guidance, licensing notes, and asset-to-dataset mapping.
+
+**Quick start:** configure the Kaggle CLI with an API token, then run `python scripts/download_datasets.py` to pull the sample solar dataset into `simulator/data/raw/`.
+
 ## Proposed Repository Structure
 ```
 UrjaNet/
