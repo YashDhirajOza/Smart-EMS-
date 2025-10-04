@@ -4,7 +4,7 @@
 services:
   # 1. The PostgreSQL Database
   # We define the database first so other services can reference it.
-  - type: db
+  - type: psql
     name: urjanet-db
     databaseName: urjanet_db # The actual name of the database inside postgres
     plan: free # Specifies the free instance type
@@ -110,3 +110,4 @@ services:
     envVars:
       - key: URJANET_API_TOKEN
         sync: false
+
