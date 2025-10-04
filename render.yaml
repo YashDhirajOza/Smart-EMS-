@@ -1,52 +1,47 @@
-# This file defines all the services for your project on Render.
-# Render will automatically create and deploy everything when you push this to your Git repo.
+# This is the structurally correct and final version.
+# Note that 'databases' is now its own section at the top.
 
-services:
-  # 1. The PostgreSQL Database
-  # We define the database first so other services can reference it.
-  - type: psql
-    name: urjanet-db
-    databaseName: urjanet_db # The actual name of the database inside postgres
-    plan: free # Specifies the free instance type
-    region: ohio
-
-  # 2. The Backend FastAPI API
-  # This is a Web Service, meaning it gets a public URL.
-  - type: web
-    name: urjanet-api
-    env: docker # Specifies to build from a Dockerfile
-    repo: https://github.com/Nikunj2608/Smart-EMS-.git
-    branch: main
-    rootDir: ./services/api # Path to the API's code
-    dockerfilePath: ./services/api/Dockerfile # Path to the Dockerfile
+databases:
+  - name: urjanet-db
+    databaseName: urjanet_db
     plan: free
     region: ohio
-    # Environment variables for the API service
+
+services:
+  # 1. The Backend FastAPI API
+  - type: web
+    name: urjanet-api
+    env: docker
+    repo: https://github.com/Nikunj2608/Smart-EMS-.git
+    branch: main
+    rootDir: ./services/api
+    dockerfilePath: ./services/api/Dockerfile
+    plan: free
+    region: ohio
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: urjanet-db
-          property: internalConnectionString # Automatically gets the internal URL from the DB service
+          property: internalConnectionString
+      # ALL secrets below must be added in the Render Dashboard
       - key: INFLUXDB_URL
         sync: false
       - key: INFLUXDB_TOKEN
         sync: false
       - key: INFLUXDB_ORG
-        value: urjanet
+        sync: false
       - key: INFLUXDB_BUCKET
-        value: urjanet_telemetry
+        sync: false
       - key: MQTT_BROKER_HOST
         sync: false
       - key: MQTT_BROKER_PORT
-        value: "1883"
+        sync: false
       - key: MQTT_TOPIC
-        value: urjanet/telemetry/#
+        sync: false
       - key: URJANET_API_TOKEN
         sync: false
-      # Render injects PORT automatically; uvicorn reads it via Dockerfile entrypoint.
 
-  # 3. The Ingestion Service
-  # This is a Background Worker, as it doesn't need a public URL.
+  # 2. The Ingestion Service
   - type: worker
     name: urjanet-ingestion
     env: docker
@@ -61,53 +56,49 @@ services:
         fromDatabase:
           name: urjanet-db
           property: internalConnectionString
+      # ALL secrets below must be added in the Render Dashboard
       - key: INFLUXDB_URL
         sync: false
       - key: INFLUXDB_TOKEN
         sync: false
       - key: INFLUXDB_ORG
-        value: urjanet
+        sync: false
       - key: INFLUXDB_BUCKET
-        value: urjanet_telemetry
+        sync: false
       - key: MQTT_BROKER_HOST
         sync: false
       - key: MQTT_BROKER_PORT
-        value: "1883"
+        sync: false
       - key: MQTT_TOPIC
-        value: urjanet/telemetry/#
+        sync: false
 
-  # 4. The React Frontend
-  # This is a Static Site, optimized for serving frontend assets.
+  # 3. The React Frontend
   - type: web
     name: urjanet-frontend
-    env: static # Specifies a static site build
+    env: static
     repo: https://github.com/Nikunj2608/Smart-EMS-.git
     branch: main
     rootDir: ./frontend
     plan: free
     region: ohio
-    # Build commands for the frontend
     buildCommand: npm install && npm run build
-    # The directory where the built files are located
     staticPublishPath: ./dist
-    # Environment variable to connect the frontend to the backend
     envVars:
-      - key: VITE_API_BASE_URL # Or REACT_APP_API_URL
+      - key: VITE_API_BASE_URL
         fromService:
           type: web
           name: urjanet-api
-          property: url # Automatically gets the public URL of the API service
+          property: url
 
- # 5. The Scheduled Job (Corrected)
+  # 4. The Scheduled Job (Corrected)
   - type: cron
     name: adaptive-scheduler
-    env: shell # Use the simpler shell environment for a curl command
+    env: shell
     region: ohio
     schedule: "0 * * * *"
     plan: free
-    command: > # This > character correctly handles multi-line commands
+    command: >
       curl -f -H "Authorization: Bearer ${URJANET_API_TOKEN}" http://urjanet-api:10000/api/system/recommendation
     envVars:
       - key: URJANET_API_TOKEN
         sync: false
-
