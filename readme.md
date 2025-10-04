@@ -1,4 +1,4 @@
-# UrjaNet – Intelligent Energy Management System
+# UrjaNet – Intelligent Energy Management System for New India
 
 ## Vision and Mission
 UrjaNet is a cloud-native, proactive Energy Management System designed to stabilize Indian microgrids impacted by distributed renewables and rapid electrification. The platform blends high-fidelity data simulation, streaming ingestion, diagnostics, predictive modeling, and immersive visualization to deliver:
