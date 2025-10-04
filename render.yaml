@@ -98,20 +98,15 @@ services:
           name: urjanet-api
           property: url # Automatically gets the public URL of the API service
 
-  # 5. The Scheduled Job
-  # This is a Cron Job to hit your API endpoint.
+ # 5. The Scheduled Job (Corrected)
   - type: cron
     name: adaptive-scheduler
-    env: docker
-    repo: https://github.com/Nikunj2608/Smart-EMS-.git
-    branch: main
-    rootDir: ./scripts
-    schedule: "0 * * * *" # Runs at the beginning of every hour
-    plan: free
+    env: shell # Use the simpler shell environment for a curl command
     region: ohio
+    schedule: "0 * * * *"
+    plan: free
+    command: > # This > character correctly handles multi-line commands
+      curl -f -H "Authorization: Bearer ${URJANET_API_TOKEN}" http://urjanet-api:10000/api/system/recommendation
     envVars:
       - key: URJANET_API_TOKEN
         sync: false
-    # The command to execute on schedule
-    command: curl -sS "${RENDER_EXTERNAL_URL}/api/system/recommendation" \
-      -H "Authorization: Bearer ${URJANET_API_TOKEN}"
